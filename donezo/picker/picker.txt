@@ -1,0 +1,9 @@
+While picker isn't a very intersting game I feel like it was a success because it was the first time I did a full sprite
+sheet with pico8, and it was my first successful upload to the bbs.
+
+There's a couple things I learned during the process:
+The way I created the entites into one big table and then just had
+each have a draw and update function seems pretty easy to maintain and obvious. 
+We don't need to have a table of states and types as if their were enums. Strings are fine to use in Lua because string
+compares are fast enough.
+If you have a spritesheet you have to make sure that a bigger sprite doesn't cross page boundries

@@ -1,0 +1,7 @@
+story = 
+{
+ " COW OH NO!\n You fell into the cookie zone!",
+ " There is an evil power in the \ncookie bricks",
+ " We need to use your milk \nand break them \nand get your back to your \nfarm-based universe.",
+ " Don't fear lil buddy. \nUsing our Pico-8 console, \na SDL-supported input device, \nand our hearts\n we'll get you through this!"
+}
