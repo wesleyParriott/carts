@@ -327,37 +327,84 @@ function create_lifebar()
 	add(_entities, lifebar)
 end
 
+function is_there_a_tower(point)
+	assert(point~=nil)
+	assert(point.x~=nil)
+	assert(point.y~=nil)
+
+	for e in all(_entities) do
+
+		if e.type == "tower" then
+			local tst = collided_pvr(point, e)
+			if tst then 
+				printd("tower x : " .. e.x .. " tower y : " .. e.y )
+				return tst 
+			end
+		end
+			
+	end
+
+	return false
+
+end
+
 function create_product(x,y,product)
 	local general_move = function(self)
 		assert(self.target ~= nil)
-		if self.target.x ~= self.x then
+
+		if self.target.x ~= flr(self.x+.5) then
 			local target_diff = self.target.x-self.x
 			local sign = target_diff < 0 and -1 or 1
 			local move=self.movement_speed*sign
 			self.x+=self.movement_speed*sign
 		end
-		if self.target.y ~= self.y then
+		if self.target.y ~= flr(self.y+.5) then
 			local target_diff = self.target.y-self.y
 			local sign = target_diff < 0 and -1 or 1
 			local move=self.movement_speed*sign
 			self.y+=self.movement_speed*sign
 		end
-		if flr(self.x) == self.target.x and
-		flr(self.y) == self.target.y then
-			future.target.y += 8
-			-- check if tower is there
-			for e in all(_entities) do 
-				if e.type == "tower" then
-					printd("found ourselves a tower")
-					local tst = collided_pvr(self.target, e)
-					if tst then 
-						printd("so the world may be mended")
-					end
-				end
+
+		if flr(self.x+.5) == self.target.x and
+		flr(self.y+.5) == self.target.y then
+			local future_target = {
+				x=self.target.x,
+				y=self.target.y
+			}
+			future_target.y += 8
+
+			local tst = is_there_a_tower(future_target)
+			if not tst then 
+				self.target = future_target
+				printd("down")
+				return
 			end
-			-- move target if needed
-			-- priority
-			-- right >  up > left
+
+			future_target.x=self.target.x+9
+			future_target.y=self.target.y
+
+			local tst = is_there_a_tower(future_target)
+			if not tst then 
+				self.target = future_target
+				printd("right")
+				return
+			end
+
+			future_target.x=self.target.x-9
+			printd("left target: " .. future_target.x)
+			local tst = is_there_a_tower(future_target)
+			if not tst then 
+				self.target = future_target
+				printd("left")
+				return
+			end
+			
+			-- should actually explode
+			assert(false)
+		else
+			printd(self.x .. ", " .. self.y)
+			printd("self: " .. self.x .. ", " .. self.y)
+			printd("trgt: " .. self.target.x .. ", " .. self.target.y)
 		end
 	end
 
